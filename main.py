@@ -7,4 +7,4 @@ Base.metadata.create_all(bind=engine)
 app = FastAPI()
 
 app.include_router(auth.router, prefix="/auth", tags=["Authentication"])
-# app.include_router(transaction.router, prefix="/transactions", tags=["Transactions"])
+app.include_router(transaction.router, prefix="/transactions", tags=["Transactions"])

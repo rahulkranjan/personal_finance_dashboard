@@ -1,16 +1,21 @@
-from sqlalchemy import Column, Integer, String, Float, ForeignKey, DateTime
-from sqlalchemy.orm import relationship
-from app.database import Base
+from pydantic import BaseModel
 from datetime import datetime
 
-class Transaction(Base):
-    __tablename__ = "transactions"
+class TransactionBase(BaseModel):
+    amount: float
+    category: str
+    description: str | None = None
+    # date: datetime | None = None
 
-    id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
-    amount = Column(Float, nullable=False)
-    category = Column(String, nullable=False)
-    description = Column(String)
-    date = Column(DateTime, default=datetime.utcnow)
+class TransactionCreate(TransactionBase):
+    pass
 
-    user = relationship("User")
+class TransactionUpdate(TransactionBase):
+    pass
+
+class TransactionOut(TransactionBase):
+    id: int
+    user_id: int
+
+    class Config:
+        from_attributes = True
