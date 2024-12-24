@@ -1,24 +1,15 @@
-# Use the official Python image with version 3.10
-FROM python:3.10-slim
+# Use the Python 3 alpine official image
+# https://hub.docker.com/_/python
+FROM python:3-alpine
 
-# Set environment variables
-ENV PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONUNBUFFERED=1
-
-# Set the working directory in the container
+# Create and change to the app directory.
 WORKDIR /app
 
-# Copy requirements file to the container
-COPY requirements.txt .
-
-# Install dependencies
-RUN pip install --no-cache-dir -r requirements.txt
-
-# Copy the application code to the container
+# Copy local code to the container image.
 COPY . .
 
-# Expose the FastAPI application port
-EXPOSE 8000
+# Install project dependencies
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Command to run the FastAPI application
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+# Run the web service on container startup.
+CMD ["hypercorn", "main:app", "--bind", "::"]
