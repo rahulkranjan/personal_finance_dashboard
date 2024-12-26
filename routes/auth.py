@@ -38,10 +38,11 @@ def login(req_user: RequestDetails, response: Response, db: Session = Depends(ge
         key="access_token",
         value=f"Bearer {access_token}",
         httponly=True,
-        secure=False, 
+        secure=True, 
         max_age=60 * 60 * 24 * 365 * 10,
-        samesite=None,
+        samesite="None",  
         domain="personalfinancedashboard-production.up.railway.app",
+
     )
 
     return {"message": "Logged in successfully"}
