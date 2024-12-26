@@ -34,14 +34,14 @@ def login(req_user: RequestDetails, response: Response, db: Session = Depends(ge
         raise HTTPException(status_code=401, detail="Invalid credentials")
     access_token = create_access_token(data={"sub": user.username})
     refresh_token = create_refresh_token(user.username)
-    response.set_cookie(key="access_token", value=f"Bearer {access_token}", httponly=True, secure=False, samesite="Lax" ,max_age=3600)
     response.set_cookie(
         key="access_token",
         value=f"Bearer {access_token}",
         httponly=True,
         secure=False, 
         max_age=60 * 60 * 24 * 365 * 10,
-        samesite=None
+        samesite=None,
+        domain="personalfinancedashboard-production.up.railway.app",
     )
 
     return {"message": "Logged in successfully"}
