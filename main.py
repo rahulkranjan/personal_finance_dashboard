@@ -12,16 +12,15 @@ app = FastAPI()
 
 # Configure CORS
 origins = [
-    "http://localhost:3000",  # Local development
-    os.getenv("FRONTEND_URL", ""),  # Frontend URL for production, if provided
+    "http://localhost:3000",
+    "https://personal-finance-fe.vercel.app"
 ]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,  # Allow specified origins
-    allow_credentials=True,
-    allow_methods=["*"],  # Allow all methods
-    allow_headers=["*"],  # Allow all headers
+    allow_origins=origins,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 # Include routers
