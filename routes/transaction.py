@@ -116,7 +116,7 @@ async def get_exchange_rate():
 @router.get("/report", response_class=StreamingResponse)
 async def generate_csv_report(db: Session = Depends(get_db), current_user: dict = Depends(get_current_user)):
     try:
-        transactions = db.query(Transaction).filter(user_id = current_user).all()
+        transactions = get_transactions(db, current_user)
 
         if not transactions:
             raise HTTPException(status_code=404, detail="No transactions found")
