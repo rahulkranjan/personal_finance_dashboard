@@ -26,10 +26,10 @@ def get_current_user(
     try:
         # Decode the token (remove "Bearer " prefix)
         payload = decode_access_token(access_token.split("Bearer ")[1])
-        user = db.query(User).filter(User.username == payload["sub"]).first()
+        user = db.query(User).filter(User.username == payload).first()
         if not user:
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="User not found")
-        return user
+        return user.id
     except Exception:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,

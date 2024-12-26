@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 from jose import JWTError, jwt
 from passlib.context import CryptContext
-from schemas.auth import TokenData
+from schemas.auth import TokenData, UserBase, UserBaseV1
 from typing import Union, Any
 from config import settings
 
@@ -30,6 +30,6 @@ def decode_access_token(token: str):
         username: str = payload.get("sub")
         if username is None:
             raise ValueError("Invalid token")
-        return TokenData(username=username)
+        return username
     except JWTError:
         raise ValueError("Token decoding failed")
