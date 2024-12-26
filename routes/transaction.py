@@ -13,6 +13,11 @@ from services.transaction import (
 from utils import get_current_user
 from sqlalchemy import func, case
 import httpx
+from fastapi.responses import StreamingResponse
+import csv
+import io
+from datetime import datetime
+
 
 router = APIRouter()
 
@@ -105,3 +110,38 @@ async def get_exchange_rate():
 
     except httpx.RequestError as exc:
         raise HTTPException(status_code=500, detail=f"An error occurred while fetching exchange rates: {exc}")
+
+
+
+@router.get("/report", response_class=StreamingResponse)
+async def generate_csv_report(db: Session = Depends(get_db), current_user: dict = Depends(get_current_user)):
+    try:
+        transactions = db.query(Transaction).filter(user_id = current_user).all()
+
+        if not transactions:
+            raise HTTPException(status_code=404, detail="No transactions found")
+
+        buffer = io.StringIO()
+        writer = csv.writer(buffer)
+
+        writer.writerow(["Date", "Description", "Category", "Amount"])
+
+        for transaction in transactions:
+            writer.writerow([
+                transaction.date.strftime("%Y-%m-%d"),
+                transaction.description,
+                transaction.category,
+                transaction.amount,
+            ])
+
+        buffer.seek(0)
+
+        filename = f"expenses_report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv"
+
+        return StreamingResponse(
+            iter([buffer.getvalue()]),
+            media_type="text/csv",
+            headers={"Content-Disposition": f"attachment; filename={filename}"},
+        )
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"An error occurred while generating the CSV: {e}")
