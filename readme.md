@@ -15,12 +15,6 @@ The **Personal Finance Tracker API** is a robust backend system developed with *
 - **Expense and Income Tracking**:
   - Add, update, and delete transactions.
   - Categorize expenses and incomes for better tracking.
-- **Budget Management**:
-  - Set budgets for specific categories or time periods.
-  - Alerts for budget overages.
-- **Reporting**:
-  - Generate insights on spending habits.
-  - View summary reports for specific timeframes or categories.
 - **Secure and Scalable**:
   - Built with industry-standard security practices.
   - Modular design for easy scalability.
@@ -30,9 +24,9 @@ The **Personal Finance Tracker API** is a robust backend system developed with *
 ## Tech Stack
 
 - **Backend**: FastAPI
-- **Database**: PostgreSQL (or any preferred RDBMS)
-- **Authentication**: OAuth2, JWT
-- **Deployment**: Docker, Gunicorn, Nginx (Optional)
+- **Database**: PostgreSQL
+- **Authentication**:  JWT
+- **Deployment**: Docker, Gunicorn, Nginx
 - **Testing**: Pytest
 
 ---
@@ -42,15 +36,15 @@ The **Personal Finance Tracker API** is a robust backend system developed with *
 ### Prerequisites
 
 - Python 3.8 or higher
-- PostgreSQL or any preferred database
+- PostgreSQL
 - [Docker](https://www.docker.com/) (optional for containerized deployment)
 
 ### Installation
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/personal-finance-tracker.git
-   cd personal-finance-tracker
+   git clone https://github.com/yourusername/personal_finance_dashboard.git
+   cd personal_finance_dashboard
    ```
 
 2. Create and activate a virtual environment:
@@ -99,16 +93,6 @@ The **Personal Finance Tracker API** is a robust backend system developed with *
 - `PUT /transactions/{id}`: Update a transaction.
 - `DELETE /transactions/{id}`: Delete a transaction.
 
-### Budgets
-- `GET /budgets/`: List all budgets.
-- `POST /budgets/`: Create a new budget.
-- `PUT /budgets/{id}`: Update a budget.
-- `DELETE /budgets/{id}`: Delete a budget.
-
-### Reports
-- `GET /reports/summary`: Get summary reports.
-- `GET /reports/{category}`: Get reports by category.
-
 ---
 
 ## Testing
@@ -124,36 +108,10 @@ pytest
 
 1. Build Docker image:
    ```bash
-   docker build -t personal-finance-tracker .
+   docker build -t personal_finance_dashboard .
    ```
 
 2. Run the container:
    ```bash
-   docker run -d -p 8000:8000 --env-file .env personal-finance-tracker
+   docker run -d -p 8000:8000 --env-file .env personal_finance_dashboard
    ```
-
----
-
-## Contributing
-
-Contributions are welcome! Please follow the steps below:
-
-1. Fork the repository.
-2. Create a new branch (`git checkout -b feature-name`).
-3. Commit your changes (`git commit -m "Add some feature"`).
-4. Push to the branch (`git push origin feature-name`).
-5. Open a Pull Request.
-
----
-
-## License
-
-This project is licensed under the [MIT License](LICENSE).
-
----
-
-## Acknowledgments
-
-- [FastAPI Documentation](https://fastapi.tiangolo.com/)
-- [PostgreSQL](https://www.postgresql.org/)
-- [Docker](https://www.docker.com/)
