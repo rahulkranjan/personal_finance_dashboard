@@ -130,7 +130,7 @@ async def generate_csv_report(db: Session = Depends(get_db), current_user: dict 
             writer.writerow([
                 transaction.date.strftime("%Y-%m-%d"),
                 transaction.description,
-                transaction.category,
+                transaction.category.value,
                 transaction.amount,
             ])
 
