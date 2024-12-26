@@ -12,6 +12,7 @@ from services.transaction import (
 )
 from utils import get_current_user
 from sqlalchemy import func, case
+import httpx
 
 router = APIRouter()
 
@@ -57,19 +58,19 @@ def get_transaction_summary(
 
     result = (
         db.query(
-            func.count(Transaction.id).label("total_transactions"),  # Count transactions
+            func.count(Transaction.id).label("total_transactions"), 
             func.sum(
                 case(
-                    (Transaction.category == TransactionCategory.income, Transaction.amount),  # Positional `when`
+                    (Transaction.category == TransactionCategory.income, Transaction.amount), 
                     else_=0,
                 )
-            ).label("total_income"),  # Total income
+            ).label("total_income"),
             func.sum(
                 case(
-                    (Transaction.category == TransactionCategory.expense, Transaction.amount),  # Positional `when`
+                    (Transaction.category == TransactionCategory.expense, Transaction.amount),
                     else_=0,
                 )
-            ).label("total_expense"),  # Total expense
+            ).label("total_expense"),
         )
         .filter(Transaction.user_id == current_user)
         .first()
@@ -83,3 +84,24 @@ def get_transaction_summary(
         "total_income": int(result.total_income or 0),
         "total_expense": int(result.total_expense or 0),
     }
+
+
+@router.get("/exchange-rate")
+async def get_exchange_rate():
+
+    try:
+        async with httpx.AsyncClient() as client:
+            response = await client.get(
+                'http://api.exchangeratesapi.io/v1/latest',
+                params={
+                    "access_key": 'f118b0bd729d80ee94fbe0505f058214',
+                    "symbols": "USD,AUD,CAD,PLN,MXN",
+                },
+            )
+            if response.status_code != 200:
+                raise HTTPException(status_code=response.status_code, detail="Error fetching exchange rate data")
+            data = response.json()
+            return {'result': data}
+
+    except httpx.RequestError as exc:
+        raise HTTPException(status_code=500, detail=f"An error occurred while fetching exchange rates: {exc}")
